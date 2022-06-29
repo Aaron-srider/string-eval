@@ -1,0 +1,11 @@
+add_library(Operator
+        BinocularOperator.cpp
+        DivisionOperator.cpp
+        LeftBracket.cpp
+        MultiplicationOperator.cpp
+        NegativeOperator.cpp
+        Operator.cpp
+        PlusOperator.cpp
+        RightBracket.cpp
+        SubtractionOperator.cpp
+        UnaryOperator.cpp)
