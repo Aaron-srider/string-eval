@@ -4,44 +4,94 @@
 
 #include "RPN.h"
 #include "exception"
+#include "common/CommonUtils.h"
 
 
-RPN::RPN(std::string infix_str) : infix_str_(std::move(infix_str)) {
-
+RPN::RPN(std::string infix_str)  {
+    std::string result;
+    DeleteWhite(infix_str, &result);
+    infix_str_ = std::move(result);
+    tokenizer_.SetInput(infix_str_);
 }
 
-int RPN::Resolve(char ch) const {
-    if (ch == '+' ||
-        ch == '-' ||
-        ch == '*' ||
-        ch == '/' ||
-        ch == '(' ||
-        ch == ')'
-            ) {
-        return 1;
+EN_RV RPN::ResolveOperand() {
+    Token *cur_token;
+    tokenizer_.PeekCurToken(&cur_token);
+    if (cur_token == nullptr || !cur_token->IsOperand()) {
+        return ENR_GENERAL_ERR;
     }
-    return 0;
-}
 
-void RPN::ResolveOperand(char cur_char_from_infix) {
-    Number *new_number = new Number(std::string("") + cur_char_from_infix);
+    Number *new_number = new Number(cur_token->ToString());
     rpn_queue_.push(new_number);
 }
+//
+//void RPN::ResolveOperator(const std::string &input, int cur_idx, char cur_char_from_infix,
+//                          std::stack<Operator *> &operator_stack) {
+//
+//    Operator *cur_op = nullptr;
+//    Operator::Build(input, cur_idx, &cur_op);
+//
+//    if (operator_stack.empty()) {
+//        operator_stack.push(cur_op);
+//        return;
+//    }
+//
+//    if (*cur_op == Operator::OperatorLabel::LEFTBRACKET) {
+//        operator_stack.push(cur_op);
+//        return;
+//    }
+//
+//    if (*cur_op == Operator::OperatorLabel::RIGHTBRACKET) {
+//        // until '('
+//        while (!(*operator_stack.top() == Operator::OperatorLabel::LEFTBRACKET)) {
+//            rpn_queue_.push(operator_stack.top());
+//            operator_stack.pop();
+//        }
+//        // pop '('
+//        operator_stack.pop();
+//        return;
+//    }
+//
+//    if (Operator::Compare(operator_stack.top(), cur_op) < 0) {
+//        while (!operator_stack.empty()) {
+//            if (Operator::Compare(operator_stack.top(), cur_op) < 0) {
+//                rpn_queue_.push(operator_stack.top());
+//                operator_stack.pop();
+//                continue;
+//            }
+//            operator_stack.push(cur_op);
+//            break;
+//        }
+//        if (operator_stack.empty()) {
+//            operator_stack.push(cur_op);
+//        }
+//
+//        return;
+//    }
+//
+//    operator_stack.push(cur_op);
+//
+//}
 
-void RPN::ResolveOperator(const std::string &input, int cur_idx, char cur_char_from_infix,
-                          std::stack<Operator *> &operator_stack) {
+EN_RV RPN::ResolveOperator(std::stack<Operator *> &operator_stack) {
 
-    Operator *cur_op = nullptr;
-    Operator::Build(input, cur_idx, &cur_op);
+    Token *cur_token;
+    tokenizer_.PeekCurToken(&cur_token);
+    if (cur_token == nullptr || !cur_token->IsOperator()) {
+        return ENR_GENERAL_ERR;
+    }
+
+    Operator *cur_op = (Operator *) cur_token;
 
     if (operator_stack.empty()) {
         operator_stack.push(cur_op);
-        return;
+        return ENR_OK;
     }
 
     if (*cur_op == Operator::OperatorLabel::LEFTBRACKET) {
         operator_stack.push(cur_op);
-        return;
+        return ENR_OK;
+
     }
 
     if (*cur_op == Operator::OperatorLabel::RIGHTBRACKET) {
@@ -52,7 +102,8 @@ void RPN::ResolveOperator(const std::string &input, int cur_idx, char cur_char_f
         }
         // pop '('
         operator_stack.pop();
-        return;
+        return ENR_OK;
+
     }
 
     if (Operator::Compare(operator_stack.top(), cur_op) < 0) {
@@ -69,7 +120,7 @@ void RPN::ResolveOperator(const std::string &input, int cur_idx, char cur_char_f
             operator_stack.push(cur_op);
         }
 
-        return;
+        return ENR_OK;
     }
 
     operator_stack.push(cur_op);
@@ -79,19 +130,40 @@ void RPN::ResolveOperator(const std::string &input, int cur_idx, char cur_char_f
 void RPN::ConvertInfix2Suffix() {
 
     std::stack<Operator *> operator_stack;
-    for (int i = 0; i < infix_str_.length(); i++) {
-        const char cur_char_from_infix = infix_str_[i];
-        switch (Resolve(cur_char_from_infix)) {
-            // 操作数
-            case 0:
-                ResolveOperand(cur_char_from_infix);
+    EN_RV rv = ENR_OK;
+    while (rv != ENR_END) {
+        Token *next_token;
+
+        rv = tokenizer_.NextToken(&next_token);
+
+        //if (rv == ENR_END) {
+        //    break;
+        //}
+
+        switch (next_token->IsOperator()) {
+            case true:
+                ResolveOperator(operator_stack);
                 break;
-                // 操作符
-            case 1:
-                ResolveOperator(infix_str_, i, cur_char_from_infix, operator_stack);
+            case false:
+                ResolveOperand();
                 break;
         }
     }
+    //for (int i = 0; i < infix_str_.length(); i++) {
+    //    const char cur_char_from_infix = infix_str_[i];
+    //    Token * next_token;
+    //    tokenizer_.NextToken(&next_token);
+    //    switch (Resolve(cur_char_from_infix)) {
+    //        // 操作数
+    //        case 0:
+    //            ResolveOperand();
+    //            break;
+    //            // 操作符
+    //        case 1:
+    //            ResolveOperator(infix_str_, i, cur_char_from_infix, operator_stack);
+    //            break;
+    //    }
+    //}
 
     while (!operator_stack.empty()) {
         rpn_queue_.push(operator_stack.top());
@@ -142,6 +214,7 @@ Number *RPN::EvalRPN() {
 
 void RPN::ResetInfixStr(std::string infix_str) {
     this->infix_str_ = std::move(infix_str);
+    this->tokenizer_.SetInput(infix_str_);
     this->rpn_queue_ = std::queue<Token *>();
 }
 

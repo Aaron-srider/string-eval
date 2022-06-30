@@ -11,3 +11,10 @@ std::string Number::ToString()  const{
 Number::Number(std::string value_text) {
     this->value_text_ = std::move(value_text);
 }
+
+bool Number::IsPositiveInt(char ch) {
+    if(ch >= '0' && ch <= '9') {
+        return true;
+    }
+    return false;
+}

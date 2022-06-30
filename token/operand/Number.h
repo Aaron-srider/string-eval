@@ -29,6 +29,8 @@ public:
 
     std::string ToString()  const;
 
+    static bool IsPositiveInt(char ch);
+
 private:
     std::string value_text_;
 

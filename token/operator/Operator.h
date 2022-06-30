@@ -65,7 +65,10 @@ public:
 
     virtual char ToChar() const = 0;
 
-    bool operator==(const Operator *other_op) const;
+
+    bool operator==(const Operator &other_op) const;
+
+    bool operator!=(const Operator &other_op) const;
 
     bool operator==(Operator::OperatorLabel operator_label) const;
 

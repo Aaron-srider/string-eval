@@ -16,6 +16,8 @@
 #include "token/operator/BinocularOperator.h"
 #include "token/operator/UnaryOperator.h"
 
+#include "token/Tokenizer.h"
+
 class RPN {
 
 public:
@@ -26,13 +28,18 @@ private:
 
     std::queue<Token *> rpn_queue_;
 
+    Tokenizer tokenizer_;
+
 private:
     int Resolve(char ch) const;
 
-    void ResolveOperand(char cur_char_from_infix);
+    EN_RV ResolveOperand();
 
-    void ResolveOperator(const std::string &input, int cur_idx, char cur_char_from_infix,
-                         std::stack<Operator *> &operator_stack);
+    //void ResolveOperator(const std::string &input, int cur_idx, char cur_char_from_infix,
+    //                     std::stack<Operator *> &operator_stack);
+
+    EN_RV ResolveOperator(
+            std::stack<Operator *> &operator_stack);
 
 public:
     void ConvertInfix2Suffix();

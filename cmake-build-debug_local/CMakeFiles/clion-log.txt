@@ -1,5 +1,0 @@
-/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/ninja -G Ninja /Users/cw/Documents/Projects/C++/Reverse_Polish_notation
-/Users/cw/Documents/Projects/C++/Reverse_Polish_notation/Google_tests/lib/googletest
--- Configuring done
--- Generating done
--- Build files have been written to: /Users/cw/Documents/Projects/C++/Reverse_Polish_notation/cmake-build-debug_local

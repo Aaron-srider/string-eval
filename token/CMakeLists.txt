@@ -4,7 +4,8 @@ add_subdirectory(operator)
 add_subdirectory(operand)
 
 add_library(Token
-        Token.cpp)
+        Token.cpp
+        Tokenizer.cpp)
 
 target_link_libraries(${PROJECT_NAME}
         Operand

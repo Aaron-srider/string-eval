@@ -216,19 +216,20 @@ Operator::OperatorLabel Operator::GetOperatorLabel() const {
     return label_;
 }
 
-bool Operator::operator==(const Operator *other_op) const {
-    if (other_op == nullptr) {
-        return false;
-    }
-
-    if ((other_op->operator_type_ == this->operator_type_) &&
-        other_op->label_ == this->label_
+bool Operator::operator==(const Operator &other_op) const {
+    if ((other_op.operator_type_ == this->operator_type_) &&
+        other_op.label_ == this->label_
             ) {
         return true;
     }
 
     return false;
 }
+
+bool Operator::operator!=(const Operator &other_op) const {
+    return !(*this == other_op);
+}
+
 
 Operator::OperatorType Operator::GetOperatorType() const {
     return operator_type_;

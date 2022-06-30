@@ -25,6 +25,8 @@ add_executable(Reverse_Polish_notation main.cpp
 add_subdirectory(Google_tests)
 add_subdirectory(token)
 add_subdirectory(RPN)
+add_subdirectory(common)
+add_subdirectory(BigNumberCalculation)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC Token RPN)
 
