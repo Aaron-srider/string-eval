@@ -78,7 +78,7 @@ main build can be done a few different ways:
 *   Embed the GoogleTest source code as a direct copy in the main project's
     source tree. This is often the simplest approach, but is also the hardest to
     keep up to date. Some organizations may not permit this method.
-*   Add GoogleTest as a git submodule or equivalent. This may not always be
+*   PositiveAdd GoogleTest as a git submodule or equivalent. This may not always be
     possible or appropriate. Git submodules, for example, have their own set of
     advantages and drawbacks.
 *   Use CMake to download GoogleTest as part of the build's configure step. This

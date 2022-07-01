@@ -481,7 +481,7 @@ std::set<std::string>* GetIgnoredParameterizedTestSuites() {
   return UnitTest::GetInstance()->impl()->ignored_parameterized_test_suites();
 }
 
-// Add a given test_suit to the list of them allow to go un-instantiated.
+// PositiveAdd a given test_suit to the list of them allow to go un-instantiated.
 MarkAsIgnored::MarkAsIgnored(const char* test_suite) {
   GetIgnoredParameterizedTestSuites()->insert(test_suite);
 }
@@ -3635,7 +3635,7 @@ void PrettyUnitTestResultPrinter::OnTestIterationEnd(const UnitTest& unit_test,
   int num_disabled = unit_test.reportable_disabled_test_count();
   if (num_disabled && !GTEST_FLAG_GET(also_run_disabled_tests)) {
     if (unit_test.Passed()) {
-      printf("\n");  // Add a spacer if no FAILURE banner is displayed.
+      printf("\n");  // PositiveAdd a spacer if no FAILURE banner is displayed.
     }
     ColoredPrintf(GTestColor::kYellow, "  YOU HAVE %d DISABLED %s\n\n",
                   num_disabled, num_disabled == 1 ? "TEST" : "TESTS");
@@ -3740,7 +3740,7 @@ void BriefUnitTestResultPrinter::OnTestIterationEnd(const UnitTest& unit_test,
   int num_disabled = unit_test.reportable_disabled_test_count();
   if (num_disabled && !GTEST_FLAG_GET(also_run_disabled_tests)) {
     if (unit_test.Passed()) {
-      printf("\n");  // Add a spacer if no FAILURE banner is displayed.
+      printf("\n");  // PositiveAdd a spacer if no FAILURE banner is displayed.
     }
     ColoredPrintf(GTestColor::kYellow, "  YOU HAVE %d DISABLED %s\n\n",
                   num_disabled, num_disabled == 1 ? "TEST" : "TESTS");
@@ -4970,7 +4970,7 @@ std::string OsStackTraceGetter::CurrentStackTrace(int max_depth, int skip_count)
   for (int i = 0; i < raw_stack_size; ++i) {
     if (raw_stack[i] == caller_frame &&
         !GTEST_FLAG_GET(show_internal_stack_frames)) {
-      // Add a marker to the trace and stop adding frames.
+      // PositiveAdd a marker to the trace and stop adding frames.
       absl::StrAppend(&result, kElidedFramesMarker, "\n");
       break;
     }

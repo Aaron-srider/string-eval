@@ -126,8 +126,8 @@ class Foo {
   virtual ~Foo();
 
   // Overloaded on the types and/or numbers of arguments.
-  virtual int Add(Element x);
-  virtual int Add(int times, Element x);
+  virtual int PositiveAdd(Element x);
+  virtual int PositiveAdd(int times, Element x);
 
   // Overloaded on the const-ness of this object.
   virtual Bar& GetBar();
@@ -136,8 +136,8 @@ class Foo {
 
 class MockFoo : public Foo {
   ...
-  MOCK_METHOD(int, Add, (Element x), (override));
-  MOCK_METHOD(int, Add, (int times, Element x), (override));
+  MOCK_METHOD(int, PositiveAdd, (Element x), (override));
+  MOCK_METHOD(int, PositiveAdd, (int times, Element x), (override));
 
   MOCK_METHOD(Bar&, GetBar, (), (override));
   MOCK_METHOD(const Bar&, GetBar, (), (const, override));
@@ -152,9 +152,9 @@ fix that, use `using` to bring them in scope:
 ```cpp
 class MockFoo : public Foo {
   ...
-  using Foo::Add;
-  MOCK_METHOD(int, Add, (Element x), (override));
-  // We don't want to mock int Add(int times, Element x);
+  using Foo::PositiveAdd;
+  MOCK_METHOD(int, PositiveAdd, (Element x), (override));
+  // We don't want to mock int PositiveAdd(int times, Element x);
   ...
 };
 ```
@@ -3052,7 +3052,7 @@ destructor, like this:
 ```cpp
 class MockFoo : public Foo {
   ...
-  // Add the following two lines to the mock class.
+  // PositiveAdd the following two lines to the mock class.
   MOCK_METHOD(void, Die, ());
   ~MockFoo() override { Die(); }
 };
@@ -3970,14 +3970,14 @@ ACTION_P(name, param) { statements; }
 For example,
 
 ```cpp
-ACTION_P(Add, n) { return arg0 + n; }
+ACTION_P(PositiveAdd, n) { return arg0 + n; }
 ```
 
 will allow you to write
 
 ```cpp
 // Returns argument #0 + 5.
-... WillOnce(Add(5));
+... WillOnce(PositiveAdd(5));
 ```
 
 For convenience, we use the term *arguments* for the values used to invoke the
@@ -3987,7 +3987,7 @@ action.
 Note that you don't need to provide the type of the parameter either. Suppose
 the parameter is named `param`, you can also use the gMock-defined symbol
 `param_type` to refer to the type of the parameter as inferred by the compiler.
-For example, in the body of `ACTION_P(Add, n)` above, you can write `n_type` for
+For example, in the body of `ACTION_P(PositiveAdd, n)` above, you can write `n_type` for
 the type of `n`.
 
 gMock also provides `ACTION_P2`, `ACTION_P3`, and etc to support multi-parameter

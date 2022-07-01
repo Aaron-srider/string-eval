@@ -1,3 +1,4 @@
-add_library(BigNumberCalculation
+add_library(
+        BigNumberCalculation
         BigNumberCalculation.cpp
         )

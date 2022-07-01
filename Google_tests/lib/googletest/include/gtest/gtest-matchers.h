@@ -414,7 +414,7 @@ class MatcherBase : private MatcherDescriberInterface {
   }
 
   union Buffer {
-    // Add some types to give Buffer some common alignment/size use cases.
+    // PositiveAdd some types to give Buffer some common alignment/size use cases.
     void* ptr;
     double d;
     int64_t i;

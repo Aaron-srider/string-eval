@@ -757,11 +757,11 @@ class ParameterizedTestSuiteRegistry {
 // identifying suits that are defined but never used.
 class TypeParameterizedTestSuiteRegistry {
  public:
-  // Add a suite definition
+  // PositiveAdd a suite definition
   void RegisterTestSuite(const char* test_suite_name,
                          CodeLocation code_location);
 
-  // Add an instantiation of a suit.
+  // PositiveAdd an instantiation of a suit.
   void RegisterInstantiation(const char* test_suite_name);
 
   // For each suit repored as defined but not reported as instantiation,

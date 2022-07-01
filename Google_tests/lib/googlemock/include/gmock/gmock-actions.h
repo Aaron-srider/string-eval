@@ -66,16 +66,16 @@
 //
 // For example:
 //
-//   ACTION_P(Add, n) { return arg0 + n; }
+//   ACTION_P(PositiveAdd, n) { return arg0 + n; }
 //
 // will allow you to write:
 //
-//   ...WillOnce(Add(5));
+//   ...WillOnce(PositiveAdd(5));
 //
 // Note that you don't need to provide the type of the parameter
 // either.  If you need to reference the type of a parameter named
 // 'foo', you can write 'foo_type'.  For example, in the body of
-// ACTION_P(Add, n) above, you can write 'n_type' to refer to the type
+// ACTION_P(PositiveAdd, n) above, you can write 'n_type' to refer to the type
 // of 'n'.
 //
 // We also provide ACTION_P2, ACTION_P3, ..., up to ACTION_P10 to support

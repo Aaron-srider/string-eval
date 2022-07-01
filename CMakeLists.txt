@@ -28,7 +28,7 @@ add_subdirectory(RPN)
 add_subdirectory(common)
 add_subdirectory(BigNumberCalculation)
 
-target_link_libraries(${PROJECT_NAME} PUBLIC Token RPN)
+target_link_libraries(${PROJECT_NAME} PUBLIC Token RPN BigNumberCalculation)
 
 # add the binary tree to the search path for include files
 target_include_directories(Reverse_Polish_notation PUBLIC
