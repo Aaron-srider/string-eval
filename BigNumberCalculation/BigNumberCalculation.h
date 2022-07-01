@@ -6,6 +6,7 @@
 #define REVERSE_POLISH_NOTATION_BIGNUMBERCALCULATION_H
 
 #include "iostream"
+#include "MacroStatus.h"
 
 class BigNumberCalculation {
 public:
@@ -22,6 +23,16 @@ public:
 
 public:
     static void Add(std::string a, std::string b, std::string *c);
+
+    static void Sub(std::string a, std::string b, std::string *c);
+
+    static void PositiveMultiply(std::string a, std::string b, std::string* c);
+
+    static void Multiply(const std::string *a, const std::string *b, std::string* c);
+
+    static EN_RV PositiveDivide(const std::string *a, const std::string *b, std::string* c);
+
+    static EN_RV Divide(const std::string *a, const std::string *b, std::string* c);
 
 public:
     static bool IsNegative(const std::string *basicString);
@@ -45,6 +56,8 @@ public:
     static bool Positive(const std::string *a);
 
     static bool Zero(const std::string *a);
+
+    static bool SameSign(const std::string *a, const std::string *b);
 };
 
 

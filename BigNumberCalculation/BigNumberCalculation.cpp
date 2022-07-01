@@ -3,6 +3,7 @@
 //
 
 #include "BigNumberCalculation.h"
+#include "MacroStatus.h"
 
 /*比较大小*/
 bool BigNumberCalculation::cmp(std::string a, std::string b) {
@@ -34,75 +35,31 @@ void BigNumberCalculation::Carry(std::string &c, int t) {
     }
 }
 
-
-void PositiveAdd(std::string a, std::string b, std::string *c) {
-    int max_len = std::max(a.size(), b.size()) + 1;
-
-    *c = std::string(max_len, '0');
-    reverse(a.begin(), a.end());
-    reverse(b.begin(), b.end());
-
-    while (a.size() < max_len) {
-        a.push_back('0');
-    }
-    while (b.size() < max_len) {
-        b.push_back('0');
-    }
-
-    unsigned char *carries = new unsigned char[max_len];
-    memset(carries, 0, max_len);
-
-    for (int i = 0; i < a.size(); i++) //按位相加
-    {
-        int sum = 0;
-
-        sum = a[i] - '0' + b[i] - '0' + carries[i];
-
-        c[i] = sum % 10;
-
-        int carry = sum / 10;
-
-        carries[i + 1] = carry;
-
-        //int size = 0;
-        //int sum = a[i] - '0' + b[i] - '0';
-        //while (sum) {
-        //    c[i + size] += sum % 10;
-        //    if (c[i + size] - '0' >= 10)
-        //        Carry(c, i + size); //进位
-        //    size++;
-        //    sum /= 10;
-        //}
-    }
-
-
-}
-
-/*大数相加*/
-std::string BigNumberCalculation::Add(std::string a, std::string b) {
-    std::string c(std::max(a.size(), b.size()) + 1, '0'); //初始化结果字符串
-    reverse(a.begin(), a.end());                //反转字符串
-    reverse(b.begin(), b.end());
-    if (a.size() < b.size()) //补零，使两串长度相等
-        a.insert(a.end(), b.size() - a.size(), '0');
-    else if (b.size() < a.size())
-        b.insert(b.end(), a.size() - b.size(), '0');
-    for (int i = 0; i < a.size(); i++) //按位相加
-    {
-        int size = 0;
-        int sum = a[i] - '0' + b[i] - '0';
-        while (sum) {
-            c[i + size] += sum % 10;
-            if (c[i + size] - '0' >= 10)
-                Carry(c, i + size); //进位
-            size++;
-            sum /= 10;
-        }
-    }
-    reverse(c.begin(), c.end());            //反转
-    c = c.substr(c.find_first_not_of('0')); //去除多余的前导零
-    return c;
-}
+///*大数相加*/
+//std::string BigNumberCalculation::Add(std::string a, std::string b) {
+//    std::string c(std::max(a.size(), b.size()) + 1, '0'); //初始化结果字符串
+//    reverse(a.begin(), a.end());                //反转字符串
+//    reverse(b.begin(), b.end());
+//    if (a.size() < b.size()) //补零，使两串长度相等
+//        a.insert(a.end(), b.size() - a.size(), '0');
+//    else if (b.size() < a.size())
+//        b.insert(b.end(), a.size() - b.size(), '0');
+//    for (int i = 0; i < a.size(); i++) //按位相加
+//    {
+//        int size = 0;
+//        int sum = a[i] - '0' + b[i] - '0';
+//        while (sum) {
+//            c[i + size] += sum % 10;
+//            if (c[i + size] - '0' >= 10)
+//                Carry(c, i + size); //进位
+//            size++;
+//            sum /= 10;
+//        }
+//    }
+//    reverse(c.begin(), c.end());            //反转
+//    c = c.substr(c.find_first_not_of('0')); //去除多余的前导零
+//    return c;
+//}
 
 /*大数相减*/
 std::string BigNumberCalculation::Less(std::string a, std::string b) {
@@ -141,6 +98,7 @@ std::string BigNumberCalculation::Less(std::string a, std::string b) {
     return c;
 }
 
+
 /*大数相乘*/
 std::string BigNumberCalculation::Multiply(std::string a, std::string b) {
     if (cmp(a, b)) //保证a > b
@@ -167,7 +125,7 @@ std::string BigNumberCalculation::Multiply(std::string a, std::string b) {
     c = c.substr(c.find_first_not_of('0'));
     return c;
 }
-
+//
 /*大数相除判断*/
 std::string BigNumberCalculation::Except_Judge(std::string a, std::string b, int n) //用来判断是大除小还是小除大
 {
@@ -181,6 +139,32 @@ std::string BigNumberCalculation::Except_Judge(std::string a, std::string b, int
         return Except_B(a, b, n);
     else
         return Except_A(a, b, n);
+}
+
+/*大数相加*/
+std::string BigNumberCalculation::Add(std::string a, std::string b) {
+    std::string c(std::max(a.size(), b.size()) + 1, '0'); //初始化结果字符串
+    reverse(a.begin(), a.end());                //反转字符串
+    reverse(b.begin(), b.end());
+    if (a.size() < b.size()) //补零，使两串长度相等
+        a.insert(a.end(), b.size() - a.size(), '0');
+    else if (b.size() < a.size())
+        b.insert(b.end(), a.size() - b.size(), '0');
+    for (int i = 0; i < a.size(); i++) //按位相加
+    {
+        int size = 0;
+        int sum = a[i] - '0' + b[i] - '0';
+        while (sum) {
+            c[i + size] += sum % 10;
+            if (c[i + size] - '0' >= 10)
+                Carry(c, i + size); //进位
+            size++;
+            sum /= 10;
+        }
+    }
+    reverse(c.begin(), c.end());            //反转
+    c = c.substr(c.find_first_not_of('0')); //去除多余的前导零
+    return c;
 }
 
 /*大除小*/
@@ -311,7 +295,9 @@ int BigNumberCalculation::Compare(std::string a, std::string b) {
         if (operand2.size() > operand1.size()) {
             return -1;
         }
-        for (int i = operand1.size() - 1; i >= 0; i--) {
+        //fix bug
+        //for(int i = operand1.size() - 1; i >= 0; i--){
+        for (int i = 0; i < operand1.size(); i++) {
             if (operand1[i] == operand2[i]) {
                 continue;
             }
@@ -384,16 +370,6 @@ void BigNumberCalculation::PositiveAdd(std::string a, std::string b, std::string
         int carry = sum / 10;
 
         carries[i + 1] = carry;
-
-        //int size = 0;
-        //int sum = a[i] - '0' + b[i] - '0';
-        //while (sum) {
-        //    c[i + size] += sum % 10;
-        //    if (c[i + size] - '0' >= 10)
-        //        Carry(c, i + size); //进位
-        //    size++;
-        //    sum /= 10;
-        //}
     }
 
     for (int i = c->size() - 1; (*c)[i] == '0'; i--) {
@@ -530,7 +506,7 @@ void BigNumberCalculation::Opposite(const std::string *original, std::string *op
     }
 
     if (Zero(original)) {
-        *opposite = std::string ("0");
+        *opposite = std::string("0");
         return;
     }
 
@@ -555,4 +531,178 @@ bool BigNumberCalculation::Zero(const std::string *a) {
         return true;
     }
     return false;
+}
+
+void BigNumberCalculation::Sub(std::string a, std::string b, std::string *c) {
+
+    c->clear();
+    std::string a_abs, b_abs;
+
+    Abs(a, a_abs);
+    Abs(b, b_abs);
+
+    if (PositiveOrZero(&a) &&
+        PositiveOrZero(&b)) {
+        PositiveSub(a, b, *c);
+
+        return;
+    }
+
+    if (PositiveOrZero(&a) && IsNegative(&b)) {
+        PositiveAdd(a, b_abs, c);
+        return;
+    }
+
+    if (IsNegative(&a) && IsNegative(&b)) {
+        PositiveSub(b_abs, a_abs, *c);
+        return;
+    }
+
+    BigNumberCalculation::PositiveAdd(a_abs, b_abs, c);
+
+    std::string result;
+    Opposite(c, &result);
+    *c = result;
+
+}
+
+void BigNumberCalculation::PositiveMultiply(std::string a, std::string b, std::string *c) {
+
+    int max_carry_len = a.size() > b.size() ? a.size() + 1 : b.size() + 1;
+
+    if (Compare(a, b) < 0) {
+        swap(a, b);
+    }
+
+    *c = std::string(a.size() + b.size() + 1, '0');
+    reverse(a.begin(), a.end());
+    reverse(b.begin(), b.end());
+
+    unsigned char *carries = new unsigned char[max_carry_len];
+    unsigned char *each_turn = new unsigned char[max_carry_len];
+    std::string sum("0");
+    for (int i = 0; i < b.size(); i++) {
+        memset(carries, 0, max_carry_len);
+        memset(each_turn, '0', max_carry_len);
+
+        for (int j = 0; j < a.size(); j++) {
+
+            int single_multiply_result = (b[i] - '0') * (a[j] - '0') + carries[j];
+            each_turn[j] = single_multiply_result % 10 + '0';
+            carries[j + 1] = single_multiply_result / 10;
+
+            if (j == a.size() - 1) {
+                each_turn[j + 1] = carries[j + 1] + '0';
+            }
+
+
+        }
+        std::string this_turn = std::string((const char *) each_turn, max_carry_len);
+        for (int k = 0; k < i; k++) {
+            this_turn.insert(this_turn.begin(), '0');
+        }
+        std::reverse(this_turn.begin(), this_turn.end());
+        std::string delete_zero;
+        DeleteZero(this_turn, delete_zero);
+        this_turn = delete_zero;
+
+
+        std::string temp_sum;
+        BigNumberCalculation::Add(this_turn, sum, &temp_sum);
+        sum = temp_sum;
+    }
+
+    *c = sum;
+}
+
+void BigNumberCalculation::Multiply(const std::string *a, const std::string *b, std::string *c) {
+    c->clear();
+    std::string a_abs, b_abs;
+    Abs(*a, a_abs);
+    Abs(*b, b_abs);
+    if (SameSign(a, b)) {
+        PositiveMultiply(a_abs, b_abs, c);
+        return;
+    }
+
+    std::string result;
+    PositiveMultiply(a_abs, b_abs, &result);
+    Opposite(&result, c);
+    return;
+}
+
+bool BigNumberCalculation::SameSign(const std::string *a, const std::string *b) {
+    if (IsNegative(a) && IsNegative(b) ||
+        PositiveOrZero(a) && PositiveOrZero(b)) {
+        return true;
+    }
+    return false;
+}
+
+
+EN_RV BigNumberCalculation::PositiveDivide(const std::string *a, const std::string *b, std::string *c) {
+    c->clear();
+    if(Zero(b)) {
+        return ENR_DIVIDE_BY_ZERO;
+    }
+
+    if (Compare(*a, *b) < 0) {
+        *c = std::string("0");
+        return ENR_OK;
+    }
+
+    int a_len = a->size();
+    int b_len = b->size();
+
+    int turn = a_len - b_len + 1;
+
+    std::string quotient;
+    std::string temp_a = a->substr(0, b_len);
+    std::string temp_r;
+    std::string r;
+
+    for (int i = 0; i < turn; i++) {
+        int count = 0;
+        std::string sub_result;
+        Sub(temp_a, *b, &sub_result);
+
+        while (PositiveOrZero(&sub_result)) {
+            count++;
+            std::string temp;
+            Sub(temp_a, *b, &temp);
+            temp_a = temp;
+            Sub(temp_a, *b, &sub_result);
+        }
+        quotient.push_back(count + '0');
+        temp_r = temp_a;
+        if(i != turn - 1) {
+            temp_a = temp_r + (*a)[b_len + i];
+        }
+    }
+    r = temp_r;
+    std::string temp;
+    DeleteZero(quotient, temp);
+    quotient = temp;
+    *c = quotient;
+    return ENR_OK;
+}
+
+EN_RV BigNumberCalculation::Divide(const std::string *a, const std::string *b, std::string *c) {
+    c->clear();
+    std::string a_abs, b_abs;
+    Abs(*a, a_abs);
+    Abs(*b, b_abs);
+    EN_RV rv;
+
+    if (SameSign(a, b)) {
+        rv = PositiveDivide(&a_abs, &b_abs, c);
+        return rv;
+    }
+
+    std::string result;
+    rv = PositiveDivide(&a_abs, &b_abs, &result);
+    if(rv!=ENR_DIVIDE_BY_ZERO) {
+        Opposite(&result, c);
+    }
+    return rv;
 }

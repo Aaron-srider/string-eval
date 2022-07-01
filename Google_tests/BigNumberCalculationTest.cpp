@@ -97,6 +97,8 @@ TEST(COMPARE, NORMAL) {
     EXPECT_TRUE(rv > 0);
     rv = BigNumberCalculation::Compare("928342", "234");
     EXPECT_TRUE(rv > 0);
+    rv = BigNumberCalculation::Compare("129", "321");
+    EXPECT_TRUE(rv < 0);
     rv = BigNumberCalculation::Compare("-928342", "234");
     EXPECT_TRUE(rv < 0);
     rv = BigNumberCalculation::Compare("928342", "-234");
@@ -170,4 +172,214 @@ TEST(Add, NORMAL) {
     BigNumberCalculation::Add(operand1, operand2, &result);
     EXPECT_EQ(result, "0");
 
+}
+
+TEST(Sub, NORMAL) {
+    std::string operand1, operand2;
+    std::string result;
+
+    operand1 = "1000";
+    operand2 = "1";
+    BigNumberCalculation::Sub(operand1, operand2, &result);
+    EXPECT_EQ(result, "999");
+
+    operand1 = "129";
+    operand2 = "321";
+    BigNumberCalculation::Sub(operand1, operand2, &result);
+    EXPECT_EQ(result, "-192");
+
+    operand1 = "999";
+    operand2 = "-1";
+    BigNumberCalculation::Sub(operand1, operand2, &result);
+    EXPECT_EQ(result, "1000");
+
+    operand1 = "-999";
+    operand2 = "1";
+    BigNumberCalculation::Sub(operand1, operand2, &result);
+    EXPECT_EQ(result, "-1000");
+
+    operand1 = "-999";
+    operand2 = "1";
+    BigNumberCalculation::Sub(operand1, operand2, &result);
+    EXPECT_EQ(result, "-1000");
+
+    operand1 = "0";
+    operand2 = "0";
+    BigNumberCalculation::Sub(operand1, operand2, &result);
+    EXPECT_EQ(result, "0");
+
+    operand1 = "-999";
+    operand2 = "-999";
+    BigNumberCalculation::Sub(operand1, operand2, &result);
+    EXPECT_EQ(result, "0");
+
+}
+
+TEST(PositiveMultiply, NORMAL) {
+    std::string operand1, operand2;
+    std::string result;
+
+    operand1 = "1000";
+    operand2 = "1";
+    BigNumberCalculation::PositiveMultiply(operand1, operand2, &result);
+    EXPECT_EQ(result, "1000");
+
+    operand1 = "999";
+    operand2 = "999";
+    BigNumberCalculation::PositiveMultiply(operand1, operand2, &result);
+    EXPECT_EQ(result, std::to_string(999 * 999));
+
+    operand1 = "1";
+    operand2 = "999";
+    BigNumberCalculation::PositiveMultiply(operand1, operand2, &result);
+    EXPECT_EQ(result, "999");
+
+    operand1 = "0";
+    operand2 = "999";
+    BigNumberCalculation::PositiveMultiply(operand1, operand2, &result);
+    EXPECT_EQ(result, "0");
+
+    operand1 = "999";
+    operand2 = "0";
+    BigNumberCalculation::PositiveMultiply(operand1, operand2, &result);
+    EXPECT_EQ(result, "0");
+
+    operand1 = "0";
+    operand2 = "0";
+    BigNumberCalculation::PositiveMultiply(operand1, operand2, &result);
+    EXPECT_EQ(result, "0");
+
+}
+
+TEST(Multiply, NORMAL) {
+    std::string operand1, operand2;
+    std::string result;
+
+    operand1 = "999";
+    operand2 = "999";
+    BigNumberCalculation::Multiply(&operand1, &operand2, &result);
+    EXPECT_EQ(result, "998001");
+
+    operand1 = "42345";
+    operand2 = "44234245";
+    BigNumberCalculation::Multiply(&operand1, &operand2, &result);
+    EXPECT_EQ(result, "1873099104525");
+
+    operand1 = "-999";
+    operand2 = "999";
+    BigNumberCalculation::Multiply(&operand1, &operand2, &result);
+    EXPECT_EQ(result, "-998001");
+
+    operand1 = "999";
+    operand2 = "-999";
+    BigNumberCalculation::Multiply(&operand1, &operand2, &result);
+    EXPECT_EQ(result, "-998001");
+
+    operand1 = "-999";
+    operand2 = "-999";
+    BigNumberCalculation::Multiply(&operand1, &operand2, &result);
+    EXPECT_EQ(result, "998001");
+
+    operand1 = "999";
+    operand2 = "0";
+    BigNumberCalculation::Multiply(&operand1, &operand2, &result);
+    EXPECT_EQ(result, "0");
+
+    operand1 = "0";
+    operand2 = "999";
+    BigNumberCalculation::Multiply(&operand1, &operand2, &result);
+    EXPECT_EQ(result, "0");
+
+    operand1 = "0";
+    operand2 = "0";
+    BigNumberCalculation::Multiply(&operand1, &operand2, &result);
+    EXPECT_EQ(result, "0");
+
+}
+
+TEST(PositiveDivide, NORMAL) {
+    std::string operand1, operand2;
+    std::string result;
+    EN_RV rv;
+
+    operand1 = "998";
+    operand2 = "999";
+    BigNumberCalculation::PositiveDivide(&operand1, &operand2, &result);
+    EXPECT_EQ(result, "0");
+
+    operand1 = "34524523452345";
+    operand2 = "172837465";
+    BigNumberCalculation::PositiveDivide(&operand1, &operand2, &result);
+    EXPECT_EQ(result, "199751");
+
+    operand1 = "234";
+    operand2 = "2432342";
+    BigNumberCalculation::PositiveDivide(&operand1, &operand2, &result);
+    EXPECT_EQ(result, "0");
+
+    operand1 = "0";
+    operand2 = "245345";
+    BigNumberCalculation::PositiveDivide(&operand1, &operand2, &result);
+    EXPECT_EQ(result, "0");
+
+    operand1 = "943";
+    operand2 = "0";
+    rv = BigNumberCalculation::PositiveDivide(&operand1, &operand2, &result);
+    EXPECT_EQ(rv, ENR_DIVIDE_BY_ZERO);
+
+    operand1 = "0";
+    operand2 = "0";
+    rv = BigNumberCalculation::PositiveDivide(&operand1, &operand2, &result);
+    EXPECT_EQ(rv, ENR_DIVIDE_BY_ZERO);
+}
+
+TEST(Divide, NORMAL) {
+    std::string operand1, operand2;
+    std::string result;
+    EN_RV rv;
+
+    operand1 = "34524523452345";
+    operand2 = "172837465";
+    BigNumberCalculation::Divide(&operand1, &operand2, &result);
+    EXPECT_EQ(result, "199751");
+
+    operand1 = "-34524523452345";
+    operand2 = "172837465";
+    BigNumberCalculation::Divide(&operand1, &operand2, &result);
+    EXPECT_EQ(result, "-199751");
+
+    operand1 = "34524523452345";
+    operand2 = "-172837465";
+    BigNumberCalculation::Divide(&operand1, &operand2, &result);
+    EXPECT_EQ(result, "-199751");
+
+    operand1 = "-34524523452345";
+    operand2 = "-172837465";
+    BigNumberCalculation::Divide(&operand1, &operand2, &result);
+    EXPECT_EQ(result, "199751");
+
+    operand1 = "172837465";
+    operand2 = "34524523452345";
+    BigNumberCalculation::Divide(&operand1, &operand2, &result);
+    EXPECT_EQ(result, "0");
+
+    operand1 = "-172837465";
+    operand2 = "34524523452345";
+    BigNumberCalculation::Divide(&operand1, &operand2, &result);
+    EXPECT_EQ(result, "0");
+
+    operand1 = "0";
+    operand2 = "172837465";
+    BigNumberCalculation::Divide(&operand1, &operand2, &result);
+    EXPECT_EQ(result, "0");
+
+    operand1 = "172837465";
+    operand2 = "0";
+    rv = BigNumberCalculation::Divide(&operand1, &operand2, &result);
+    EXPECT_EQ(rv, ENR_DIVIDE_BY_ZERO);
+
+    operand1 = "0";
+    operand2 = "0";
+    rv = BigNumberCalculation::Divide(&operand1, &operand2, &result);
+    EXPECT_EQ(rv, ENR_DIVIDE_BY_ZERO);
 }
