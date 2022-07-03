@@ -5,7 +5,7 @@
 #include "Tokenizer.h"
 #include "common/CommonUtils.h"
 
-EN_RV Tokenizer::GetInternalTokenList(std::vector<Token *> *copy_list) {
+EN_RV Tokenizer::GetInternalTokenList(std::vector<Token *> *copy_list) const{
 
     for (int i = 0; i < token_list_.size(); i++) {
         Token *cur_token = token_list_.at(i);
@@ -28,7 +28,7 @@ EN_RV Tokenizer::GetInternalTokenList(std::vector<Token *> *copy_list) {
     return ENR_OK;
 }
 
-void Tokenizer::SetInput(std::string input) {
+void Tokenizer::ResetInputSourceString(const std::string *input) {
     std::string result;
     DeleteWhite(input, &result);
     this->input_ = std::move(result);

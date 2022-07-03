@@ -12,41 +12,6 @@
 #include "token/operator/SubtractionOperator.h"
 #include "token/operator/RightBracket.h"
 
-
-TEST(PeekNextToken, NORMAL) {
-    std::string input = "-3*5+(-7/3-4)";
-    Tokenizer tokenizer(input);
-    Token *token = nullptr;
-    EN_RV rv = tokenizer.PeekNext(&token);
-
-    EXPECT_EQ(rv, ENR_OK);
-    EXPECT_TRUE(token->IsOperator());
-    EXPECT_TRUE(((Operator *) token)->GetOperatorLabel() == Operator::OperatorLabel::NEGATIVE);
-}
-
-
-TEST(PeekNextToken, PEEK_END) {
-    std::string input = "-3*5+(-7/3-4)";
-    Tokenizer tokenizer(input);
-    Token *token = nullptr;
-    EN_RV rv = ENR_OK;
-
-    //get all tokens
-    while (rv != ENR_END) {
-        rv = tokenizer.NextToken(&token);
-        EXPECT_TRUE(rv == ENR_END || rv == ENR_OK);
-        if (rv == ENR_UNRECOGNIZED_TOKEN) {
-            exit(rv);
-        }
-    }
-    rv = tokenizer.PeekNext(&token);
-
-    EXPECT_EQ(rv, ENR_END);
-
-
-}
-
-
 TEST(NextToken, NORMAL) {
 
     //expect token list

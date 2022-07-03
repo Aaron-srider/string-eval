@@ -9,9 +9,9 @@
 
 RPN::RPN(std::string infix_str)  {
     std::string result;
-    DeleteWhite(infix_str, &result);
+    DeleteWhite(&infix_str, &result);
     infix_str_ = std::move(result);
-    tokenizer_.SetInput(infix_str_);
+    tokenizer_.ResetInputSourceString(&infix_str_);
 }
 
 EN_RV RPN::ResolveOperand() {
@@ -23,58 +23,10 @@ EN_RV RPN::ResolveOperand() {
 
     Number *new_number = new Number(cur_token->ToString());
     rpn_queue_.push(new_number);
+    delete cur_token;
 }
-//
-//void RPN::ResolveOperator(const std::string &input, int cur_idx, char cur_char_from_infix,
-//                          std::stack<Operator *> &operator_stack) {
-//
-//    Operator *cur_op = nullptr;
-//    Operator::Build(input, cur_idx, &cur_op);
-//
-//    if (operator_stack.empty()) {
-//        operator_stack.push(cur_op);
-//        return;
-//    }
-//
-//    if (*cur_op == Operator::OperatorLabel::LEFTBRACKET) {
-//        operator_stack.push(cur_op);
-//        return;
-//    }
-//
-//    if (*cur_op == Operator::OperatorLabel::RIGHTBRACKET) {
-//        // until '('
-//        while (!(*operator_stack.top() == Operator::OperatorLabel::LEFTBRACKET)) {
-//            rpn_queue_.push(operator_stack.top());
-//            operator_stack.pop();
-//        }
-//        // pop '('
-//        operator_stack.pop();
-//        return;
-//    }
-//
-//    if (Operator::Compare(operator_stack.top(), cur_op) < 0) {
-//        while (!operator_stack.empty()) {
-//            if (Operator::Compare(operator_stack.top(), cur_op) < 0) {
-//                rpn_queue_.push(operator_stack.top());
-//                operator_stack.pop();
-//                continue;
-//            }
-//            operator_stack.push(cur_op);
-//            break;
-//        }
-//        if (operator_stack.empty()) {
-//            operator_stack.push(cur_op);
-//        }
-//
-//        return;
-//    }
-//
-//    operator_stack.push(cur_op);
-//
-//}
 
 EN_RV RPN::ResolveOperator(std::stack<Operator *> &operator_stack) {
-
     Token *cur_token;
     tokenizer_.PeekCurToken(&cur_token);
     if (cur_token == nullptr || !cur_token->IsOperator()) {
@@ -102,6 +54,8 @@ EN_RV RPN::ResolveOperator(std::stack<Operator *> &operator_stack) {
         }
         // pop '('
         operator_stack.pop();
+
+        delete cur_op;
         return ENR_OK;
 
     }
@@ -214,7 +168,7 @@ Number *RPN::EvalRPN() {
 
 void RPN::ResetInfixStr(std::string infix_str) {
     this->infix_str_ = std::move(infix_str);
-    this->tokenizer_.SetInput(infix_str_);
+    this->tokenizer_.ResetInputSourceString(&infix_str_);
     this->rpn_queue_ = std::queue<Token *>();
 }
 

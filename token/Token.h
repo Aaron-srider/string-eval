@@ -15,6 +15,8 @@ public:
 
     virtual std::string ToString() const = 0;
 
+    virtual ~Token() = default;
+
 };
 
 

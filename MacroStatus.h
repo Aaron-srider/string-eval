@@ -17,4 +17,9 @@ typedef unsigned long EN_RV;
 
 
 
+typedef unsigned char SingleInt;
+typedef unsigned char Byte;
+
+
+
 #endif //REVERSE_POLISH_NOTATION_MACROSTATUS_H

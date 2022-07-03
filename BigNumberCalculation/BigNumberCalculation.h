@@ -22,11 +22,11 @@ public:
     std::string Module(std::string a, std::string b);              //大数求模
 
 public:
-    static void Add(std::string a, std::string b, std::string *c);
+    static void Add(const std::string *a, const std::string *b, std::string *c);
 
-    static void Sub(std::string a, std::string b, std::string *c);
+    static void Sub(const std::string *a, const std::string *b, std::string *c);
 
-    static void PositiveMultiply(std::string a, std::string b, std::string* c);
+    static void PositiveMultiply(const std::string *a, const std::string *b, std::string* c);
 
     static void Multiply(const std::string *a, const std::string *b, std::string* c);
 
@@ -43,11 +43,11 @@ public:
 
     static void DeleteZero(std::string number, std::string &result);
 
-    static void Abs(std::string a, std::string &result);
+    static void Abs(const std::string *a, std::string *result);
 
-    static int Compare(std::string a, std::string b);
+    static int Compare(const std::string *a, const std::string *b);
 
-    static void PositiveAdd(std::string a, std::string b, std::string *c);
+    static void PositiveAdd(const std::string *a, const std::string *b, std::string *c);
 
     static void PositiveSub(std::string a, std::string b, std::string &c);
 

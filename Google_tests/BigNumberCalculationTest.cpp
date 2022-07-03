@@ -9,22 +9,37 @@
 TEST(POSITIVE_ADD, NORMAL) {
 
     std::string result;
-    BigNumberCalculation::PositiveAdd("92534999", "992349", &result);
+    std::string operand1;
+    std::string operand2;
+
+    operand1 = "92534999";
+    operand2 = "992349";
+    BigNumberCalculation::PositiveAdd(&operand1, &operand2, &result);
     EXPECT_EQ(result, "93527348");
 
-    BigNumberCalculation::PositiveAdd("999", "1", &result);
+    operand1 = "999";
+    operand2 = "1";
+    BigNumberCalculation::PositiveAdd(&operand1, &operand2, &result);
     EXPECT_EQ(result, "1000");
 
-    BigNumberCalculation::PositiveAdd("999", "999", &result);
+    operand1 = "999";
+    operand2 = "999";
+    BigNumberCalculation::PositiveAdd(&operand1, &operand2, &result);
     EXPECT_EQ(result, "1998");
 
-    BigNumberCalculation::PositiveAdd("999", "0", &result);
+    operand1 = "999";
+    operand2 = "0";
+    BigNumberCalculation::PositiveAdd(&operand1, &operand2, &result);
     EXPECT_EQ(result, "999");
 
-    BigNumberCalculation::PositiveAdd("1", "0", &result);
+    operand1 = "1";
+    operand2 = "0";
+    BigNumberCalculation::PositiveAdd(&operand1, &operand2, &result);
     EXPECT_EQ(result, "1");
 
-    BigNumberCalculation::PositiveAdd("0", "0", &result);
+    operand1 = "0";
+    operand2 = "0";
+    BigNumberCalculation::PositiveAdd(&operand1, &operand2, &result);
     EXPECT_EQ(result, "0");
 
 }
@@ -78,14 +93,18 @@ TEST(DeleteZero, NORMAL) {
 TEST(ABS, NORMAL) {
 
     std::string result;
+    std::string a;
 
-    BigNumberCalculation::Abs("-123", result);
+    a = "-123";
+    BigNumberCalculation::Abs(&a, &result);
     EXPECT_EQ(result, "123");
 
-    BigNumberCalculation::Abs("123", result);
+    a = "123";
+    BigNumberCalculation::Abs(&a, &result);
     EXPECT_EQ(result, "123");
 
-    BigNumberCalculation::Abs("0", result);
+    a = "0";
+    BigNumberCalculation::Abs(&a, &result);
     EXPECT_EQ(result, "0");
 }
 //
@@ -93,25 +112,57 @@ TEST(ABS, NORMAL) {
 TEST(COMPARE, NORMAL) {
 
     int rv = 0;
-    rv = BigNumberCalculation::Compare("928342", "0");
+    std::string a;
+    std::string b;
+
+    a = "928342";
+    b = "0";
+    rv = BigNumberCalculation::Compare(&a, &b);
     EXPECT_TRUE(rv > 0);
-    rv = BigNumberCalculation::Compare("928342", "234");
+
+    a = "928342";
+    b = "234";
+    rv = BigNumberCalculation::Compare(&a, &b);
     EXPECT_TRUE(rv > 0);
-    rv = BigNumberCalculation::Compare("129", "321");
+
+    a = "129";
+    b = "321";
+    rv = BigNumberCalculation::Compare(&a, &b);
     EXPECT_TRUE(rv < 0);
-    rv = BigNumberCalculation::Compare("-928342", "234");
+
+    a = "-928342";
+    b = "234";
+    rv = BigNumberCalculation::Compare(&a, &b);
     EXPECT_TRUE(rv < 0);
-    rv = BigNumberCalculation::Compare("928342", "-234");
+
+    a = "928342";
+    b = "0";
+    rv = BigNumberCalculation::Compare(&a, &b);
     EXPECT_TRUE(rv > 0);
-    rv = BigNumberCalculation::Compare("-928342", "0");
+
+    a = "-928342";
+    b = "0";
+    rv = BigNumberCalculation::Compare(&a, &b);
     EXPECT_TRUE(rv < 0);
-    rv = BigNumberCalculation::Compare("0", "-234");
+
+    a = "0";
+    b = "-234";
+    rv = BigNumberCalculation::Compare(&a, &b);
     EXPECT_TRUE(rv > 0);
-    rv = BigNumberCalculation::Compare("928342", "928342");
+
+    a = "928342";
+    b = "928342";
+    rv = BigNumberCalculation::Compare(&a, &b);
     EXPECT_TRUE(rv == 0);
-    rv = BigNumberCalculation::Compare("0", "0");
+
+    a = "0";
+    b = "0";
+    rv = BigNumberCalculation::Compare(&a, &b);
     EXPECT_TRUE(rv == 0);
-    rv = BigNumberCalculation::Compare("-1", "-1");
+
+    a = "-1";
+    b = "-1";
+    rv = BigNumberCalculation::Compare(&a, &b);
     EXPECT_TRUE(rv == 0);
 }
 //
@@ -139,37 +190,37 @@ TEST(Add, NORMAL) {
 
     operand1 = "999";
     operand2 = "1";
-    BigNumberCalculation::Add(operand1, operand2, &result);
+    BigNumberCalculation::Add(&operand1, &operand2, &result);
     EXPECT_EQ(result, "1000");
 
     operand1 = "1000";
     operand2 = "-1";
-    BigNumberCalculation::Add(operand1, operand2, &result);
+    BigNumberCalculation::Add(&operand1, &operand2, &result);
     EXPECT_EQ(result, "999");
 
     operand1 = "-1000";
     operand2 = "1";
-    BigNumberCalculation::Add(operand1, operand2, &result);
+    BigNumberCalculation::Add(&operand1, &operand2, &result);
     EXPECT_EQ(result, "-999");
 
     operand1 = "-999";
     operand2 = "-1";
-    BigNumberCalculation::Add(operand1, operand2, &result);
+    BigNumberCalculation::Add(&operand1, &operand2, &result);
     EXPECT_EQ(result, "-1000");
 
     operand1 = "999";
     operand2 = "1";
-    BigNumberCalculation::Add(operand1, operand2, &result);
+    BigNumberCalculation::Add(&operand1, &operand2, &result);
     EXPECT_EQ(result, "1000");
 
     operand1 = "0";
     operand2 = "0";
-    BigNumberCalculation::Add(operand1, operand2, &result);
+    BigNumberCalculation::Add(&operand1, &operand2, &result);
     EXPECT_EQ(result, "0");
 
     operand1 = "999";
     operand2 = "-999";
-    BigNumberCalculation::Add(operand1, operand2, &result);
+    BigNumberCalculation::Add(&operand1, &operand2, &result);
     EXPECT_EQ(result, "0");
 
 }
@@ -180,37 +231,32 @@ TEST(Sub, NORMAL) {
 
     operand1 = "1000";
     operand2 = "1";
-    BigNumberCalculation::Sub(operand1, operand2, &result);
+    BigNumberCalculation::Sub(&operand1, &operand2, &result);
     EXPECT_EQ(result, "999");
 
     operand1 = "129";
     operand2 = "321";
-    BigNumberCalculation::Sub(operand1, operand2, &result);
+    BigNumberCalculation::Sub(&operand1, &operand2, &result);
     EXPECT_EQ(result, "-192");
 
     operand1 = "999";
     operand2 = "-1";
-    BigNumberCalculation::Sub(operand1, operand2, &result);
+    BigNumberCalculation::Sub(&operand1, &operand2, &result);
     EXPECT_EQ(result, "1000");
 
     operand1 = "-999";
     operand2 = "1";
-    BigNumberCalculation::Sub(operand1, operand2, &result);
-    EXPECT_EQ(result, "-1000");
-
-    operand1 = "-999";
-    operand2 = "1";
-    BigNumberCalculation::Sub(operand1, operand2, &result);
+    BigNumberCalculation::Sub(&operand1, &operand2, &result);
     EXPECT_EQ(result, "-1000");
 
     operand1 = "0";
     operand2 = "0";
-    BigNumberCalculation::Sub(operand1, operand2, &result);
+    BigNumberCalculation::Sub(&operand1, &operand2, &result);
     EXPECT_EQ(result, "0");
 
     operand1 = "-999";
     operand2 = "-999";
-    BigNumberCalculation::Sub(operand1, operand2, &result);
+    BigNumberCalculation::Sub(&operand1, &operand2, &result);
     EXPECT_EQ(result, "0");
 
 }
@@ -221,32 +267,27 @@ TEST(PositiveMultiply, NORMAL) {
 
     operand1 = "1000";
     operand2 = "1";
-    BigNumberCalculation::PositiveMultiply(operand1, operand2, &result);
+    BigNumberCalculation::PositiveMultiply(&operand1, &operand2, &result);
     EXPECT_EQ(result, "1000");
 
     operand1 = "999";
     operand2 = "999";
-    BigNumberCalculation::PositiveMultiply(operand1, operand2, &result);
+    BigNumberCalculation::PositiveMultiply(&operand1, &operand2, &result);
     EXPECT_EQ(result, std::to_string(999 * 999));
-
-    operand1 = "1";
-    operand2 = "999";
-    BigNumberCalculation::PositiveMultiply(operand1, operand2, &result);
-    EXPECT_EQ(result, "999");
 
     operand1 = "0";
     operand2 = "999";
-    BigNumberCalculation::PositiveMultiply(operand1, operand2, &result);
+    BigNumberCalculation::PositiveMultiply(&operand1, &operand2, &result);
     EXPECT_EQ(result, "0");
 
     operand1 = "999";
     operand2 = "0";
-    BigNumberCalculation::PositiveMultiply(operand1, operand2, &result);
+    BigNumberCalculation::PositiveMultiply(&operand1, &operand2, &result);
     EXPECT_EQ(result, "0");
 
     operand1 = "0";
     operand2 = "0";
-    BigNumberCalculation::PositiveMultiply(operand1, operand2, &result);
+    BigNumberCalculation::PositiveMultiply(&operand1, &operand2, &result);
     EXPECT_EQ(result, "0");
 
 }
@@ -301,11 +342,6 @@ TEST(PositiveDivide, NORMAL) {
     std::string operand1, operand2;
     std::string result;
     EN_RV rv;
-
-    operand1 = "998";
-    operand2 = "999";
-    BigNumberCalculation::PositiveDivide(&operand1, &operand2, &result);
-    EXPECT_EQ(result, "0");
 
     operand1 = "34524523452345";
     operand2 = "172837465";

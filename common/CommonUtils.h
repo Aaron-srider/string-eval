@@ -7,6 +7,11 @@
 
 #include "iostream"
 
-void DeleteWhite(std::string str, std::string *result);
+/**
+* Delete white char(\n \t \r ' ') from a std::string.
+* @param str [in] target str to be processed.
+* @param result [out] result string.
+*/
+void DeleteWhite(const std::string *str, std::string *result);
 
 #endif //REVERSE_POLISH_NOTATION_COMMONUTILS_H

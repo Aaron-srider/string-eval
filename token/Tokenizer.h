@@ -22,21 +22,30 @@ public:
     explicit Tokenizer(std::string input) : idx_(0), input_(std::move(input)) {
     }
 
-    EN_RV PeekCurToken(Token** cur_token) const;
+    /**
+    * Return the current token. Remember to delete cur_token when you dont need it.
+    * @param cur_token [out] current token
+    * @return return ENR_OK if success.
+    */
+    EN_RV PeekCurToken(Token **cur_token) const;
 
-    // if next end, return nullptr; return value need to be deleted when not used.
+    /**
+    * Return the next token. Remember to delete next_token when you dont need it.
+    * @param cur_token [out] next token
+    * @return Return ENR_OK if not the last one, otherwise return ENR_END.
+    */
     EN_RV NextToken(Token **next_token) {
 
         if (idx_ >= input_.size()) {
             return ENR_END;
         }
 
-        if (input_.at(idx_) == '+' ||
-            input_.at(idx_) == '-' ||
-            input_.at(idx_) == '*' ||
-            input_.at(idx_) == '/' ||
-            input_.at(idx_) == '(' ||
-            input_.at(idx_) == ')') {
+        if (input_[idx_] == '+' ||
+            input_[idx_] == '-' ||
+            input_[idx_] == '*' ||
+            input_[idx_] == '/' ||
+            input_[idx_] == '(' ||
+            input_[idx_] == ')') {
             Operator *op;
             Operator::Build(input_, idx_, &op);
             *next_token = op;
@@ -70,49 +79,50 @@ public:
         return ENR_UNRECOGNIZED_TOKEN;
     }
 
-    // if next end, return nullptr; return value need to be deleted when not used.
-    EN_RV PeekNext(Token **next_token) {
+    //// if next end, return nullptr; return value need to be deleted when not used.
+    //EN_RV PeekNext(Token **next_token) {
+    //
+    //    if (idx_ >= input_.size()) {
+    //        return ENR_END;
+    //    }
+    //
+    //    if (input_.at(idx_) == '+' ||
+    //        input_.at(idx_) == '-' ||
+    //        input_.at(idx_) == '*' ||
+    //        input_.at(idx_) == '/' ||
+    //        input_.at(idx_) == '(' ||
+    //        input_.at(idx_) == ')') {
+    //        Operator *op;
+    //        Operator::Build(input_, idx_, &op);
+    //        *next_token = op;
+    //        if (idx_ + 1 >= input_.size()) {
+    //            return ENR_END;
+    //        }
+    //        return ENR_OK;
+    //    }
+    //
+    //    if (Number::IsPositiveInt(input_.at(idx_))) {
+    //        std::string integer;
+    //        int idx_temp = idx_;
+    //        while (idx_temp < input_.size() && Number::IsPositiveInt(input_.at(idx_temp))) {
+    //            integer.push_back(input_.at(idx_temp));
+    //            idx_temp++;
+    //        }
+    //        *next_token = new Number(integer);
+    //        if (idx_temp >= input_.size()) {
+    //            return ENR_END;
+    //        }
+    //
+    //        return ENR_OK;
+    //    }
+    //    *next_token = nullptr;
+    //    return ENR_UNRECOGNIZED_TOKEN;
+    //}
 
-        if (idx_ >= input_.size()) {
-            return ENR_END;
-        }
+    void ResetInputSourceString(const std::string *input);
 
-        if (input_.at(idx_) == '+' ||
-            input_.at(idx_) == '-' ||
-            input_.at(idx_) == '*' ||
-            input_.at(idx_) == '/' ||
-            input_.at(idx_) == '(' ||
-            input_.at(idx_) == ')') {
-            Operator *op;
-            Operator::Build(input_, idx_, &op);
-            *next_token = op;
-            if (idx_ + 1 >= input_.size()) {
-                return ENR_END;
-            }
-            return ENR_OK;
-        }
+    EN_RV GetInternalTokenList(std::vector<Token *> *copy_list) const;
 
-        if (Number::IsPositiveInt(input_.at(idx_))) {
-            std::string integer;
-            int idx_temp = idx_;
-            while (idx_temp < input_.size() && Number::IsPositiveInt(input_.at(idx_temp))) {
-                integer.push_back(input_.at(idx_temp));
-                idx_temp++;
-            }
-            *next_token = new Number(integer);
-            if (idx_temp >= input_.size()) {
-                return ENR_END;
-            }
-
-            return ENR_OK;
-        }
-        *next_token = nullptr;
-        return ENR_UNRECOGNIZED_TOKEN;
-    }
-
-    void SetInput(std::string input);
-
-    EN_RV GetInternalTokenList(std::vector<Token *> *copy_list);
 private:
     std::string input_;
 

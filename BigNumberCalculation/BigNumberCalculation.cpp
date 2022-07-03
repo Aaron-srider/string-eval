@@ -264,22 +264,22 @@ void BigNumberCalculation::DeleteZero(std::string number, std::string &result) {
 }
 
 //#include "common/CommonUtils.h"
-void BigNumberCalculation::Abs(std::string a, std::string &result) {
-    if (PositiveOrZero(&a)) {
-        result = a;
+void BigNumberCalculation::Abs(const std::string *a, std::string *result) {
+    if (PositiveOrZero(a)) {
+        *result = *a;
         return;
     }
 
-    result = a.substr(1, a.size() - 1);
+    *result = a->substr(1, a->size() - 1);
 }
 
 
-int BigNumberCalculation::Compare(std::string a, std::string b) {
+int BigNumberCalculation::Compare(const std::string *a, const std::string *b) {
     std::string operand1;
-    DeleteZero(a, operand1);
+    DeleteZero(*a, operand1);
 
     std::string operand2;
-    DeleteZero(b, operand2);
+    DeleteZero(*b, operand2);
 
     if (PositiveOrZero(&operand1) && IsNegative(&operand2)) {
         return 1;
@@ -309,7 +309,7 @@ int BigNumberCalculation::Compare(std::string a, std::string b) {
     if (IsNegative(&operand1) && IsNegative(&operand2)) {
         std::string operand1_abs;
         std::string operand2_abs;
-        Abs(operand1, operand1_abs), Abs(operand2, operand2_abs);
+        Abs(&operand1, &operand1_abs), Abs(&operand2, &operand2_abs);
         return -PositiveOrZeroCompare(operand1_abs, operand2_abs);
     }
 }
@@ -341,29 +341,33 @@ bool BigNumberCalculation::IsNegative(const std::string *basicString) {
     return false;
 }
 
-void BigNumberCalculation::PositiveAdd(std::string a, std::string b, std::string *c) {
+void BigNumberCalculation::PositiveAdd(const std::string *a, const std::string *b, std::string *c) {
 
-    int max_len = std::max(a.size(), b.size()) + 1;
+    int max_len = std::max(a->size(), b->size()) + 1;
+
+    std::string operand1, operand2;
+    operand1 = *a;
+    operand2 = *b;
 
     c->clear();
-    reverse(a.begin(), a.end());
-    reverse(b.begin(), b.end());
+    reverse(operand1.begin(), operand1.end());
+    reverse(operand2.begin(), operand2.end());
 
-    while (a.size() < max_len) {
-        a.push_back('0');
+    while (operand1.size() < max_len) {
+        operand1.push_back('0');
     }
-    while (b.size() < max_len) {
-        b.push_back('0');
+    while (operand2.size() < max_len) {
+        operand2.push_back('0');
     }
 
-    unsigned char *carries = new unsigned char[max_len];
+    auto *carries = new SingleInt[max_len];
     memset(carries, 0, max_len);
 
-    for (int i = 0; i < a.size(); i++) //按位相加
+    for (int i = 0; i < operand1.size(); i++) //按位相加
     {
         int sum = 0;
 
-        sum = a[i] - '0' + b[i] - '0' + carries[i];
+        sum = operand1[i] - '0' + operand2[i] - '0' + carries[i];
 
         c->push_back(sum % 10 + '0');
 
@@ -389,23 +393,23 @@ void BigNumberCalculation::PositiveSub(std::string a, std::string b, std::string
     c.clear();
 
     bool take_opposite = false;
-    if (Compare(a, b) < 0) {
+    if (Compare(&a, &b) < 0) {
         take_opposite = true;
     }
 
     std::string a_abs, b_abs;
-    Abs(a, a_abs);
-    Abs(b, b_abs);
+    Abs(&a, &a_abs);
+    Abs(&b, &b_abs);
 
-    if (Compare(a, b) == 0) {
+    if (Compare(&a, &b) == 0) {
         c.push_back('0');
         return;
     }
 
     std::string big_positive, small_positive;
 
-    big_positive = Compare(a_abs, b_abs) > 0 ? a_abs : b_abs;
-    small_positive = Compare(a_abs, b_abs) < 0 ? a_abs : b_abs;
+    big_positive = Compare(&a_abs, &b_abs) > 0 ? a_abs : b_abs;
+    small_positive = Compare(&a_abs, &b_abs) < 0 ? a_abs : b_abs;
 
     int max_len = std::max(a.size(), b.size());
     reverse(big_positive.begin(), big_positive.end());
@@ -467,31 +471,31 @@ void BigNumberCalculation::PositiveSub(std::string a, std::string b, std::string
     return;
 }
 
-void BigNumberCalculation::Add(std::string a, std::string b, std::string *c) {
+void BigNumberCalculation::Add(const std::string *a, const std::string *b, std::string *c) {
     c->clear();
-    if (PositiveOrZero(&a) && PositiveOrZero(&b)) {
+    if (PositiveOrZero(a) && PositiveOrZero(b)) {
         PositiveAdd(a, b, c);
         return;
     }
 
-    if (PositiveOrZero(&a) && !PositiveOrZero(&b) ||
-        PositiveOrZero(&b) && !PositiveOrZero(&a)
+    if (PositiveOrZero(a) && !PositiveOrZero(b) ||
+        PositiveOrZero(b) && !PositiveOrZero(a)
             ) {
         std::string positive, negative;
-        positive = PositiveOrZero(&a) ? a : b;
-        negative = IsNegative(&a) ? a : b;
+        positive = PositiveOrZero(a) ? *a : *b;
+        negative = IsNegative(a) ? *a : *b;
         std::string negative_abs;
-        Abs(negative, negative_abs);
+        Abs(&negative, &negative_abs);
         PositiveSub(positive, negative_abs, *c);
 
         return;
     }
 
     std::string a_abs, b_abs;
-    Abs(a, a_abs);
-    Abs(b, b_abs);
+    Abs(a, &a_abs);
+    Abs(b, &b_abs);
 
-    PositiveAdd(a_abs, b_abs, c);
+    PositiveAdd(&a_abs, &b_abs, c);
 
     std::string result;
     Opposite(c, &result);
@@ -533,65 +537,68 @@ bool BigNumberCalculation::Zero(const std::string *a) {
     return false;
 }
 
-void BigNumberCalculation::Sub(std::string a, std::string b, std::string *c) {
+void BigNumberCalculation::Sub(const std::string *a, const std::string *b, std::string *c) {
 
     c->clear();
     std::string a_abs, b_abs;
 
-    Abs(a, a_abs);
-    Abs(b, b_abs);
+    Abs(a, &a_abs);
+    Abs(b, &b_abs);
 
-    if (PositiveOrZero(&a) &&
-        PositiveOrZero(&b)) {
-        PositiveSub(a, b, *c);
+    if (PositiveOrZero(a) &&
+        PositiveOrZero(b)) {
+        PositiveSub(*a, *b, *c);
 
         return;
     }
 
-    if (PositiveOrZero(&a) && IsNegative(&b)) {
-        PositiveAdd(a, b_abs, c);
+    if (PositiveOrZero(a) && IsNegative(b)) {
+        PositiveAdd(a, &b_abs, c);
         return;
     }
 
-    if (IsNegative(&a) && IsNegative(&b)) {
+    if (IsNegative(a) && IsNegative(b)) {
         PositiveSub(b_abs, a_abs, *c);
         return;
     }
 
-    BigNumberCalculation::PositiveAdd(a_abs, b_abs, c);
+    BigNumberCalculation::PositiveAdd(&a_abs, &b_abs, c);
 
     std::string result;
     Opposite(c, &result);
-    *c = result;
+    *c = std::move(result);
 
 }
 
-void BigNumberCalculation::PositiveMultiply(std::string a, std::string b, std::string *c) {
+void BigNumberCalculation::PositiveMultiply(const std::string *a, const std::string *b, std::string *c) {
 
-    int max_carry_len = a.size() > b.size() ? a.size() + 1 : b.size() + 1;
+    int max_carry_len = a->size() > b->size() ? a->size() + 1 : b->size() + 1;
+    std::string operand1 = *a;
+    std::string operand2 = *b;
 
-    if (Compare(a, b) < 0) {
-        swap(a, b);
+    if (Compare(&operand1, &operand2) < 0) {
+        swap(operand1, operand2);
     }
 
-    *c = std::string(a.size() + b.size() + 1, '0');
-    reverse(a.begin(), a.end());
-    reverse(b.begin(), b.end());
+    *c = std::string(operand1.size() + operand2.size() + 1, '0');
+    reverse(operand1.begin(), operand1.end());
+    reverse(operand2.begin(), operand2.end());
 
-    unsigned char *carries = new unsigned char[max_carry_len];
-    unsigned char *each_turn = new unsigned char[max_carry_len];
-    std::string sum("0");
-    for (int i = 0; i < b.size(); i++) {
+
+    auto *carries = new SingleInt[max_carry_len];
+    auto *each_turn = new Byte[max_carry_len];
+    *c = "0";
+    for (int i = 0; i < operand2.size(); i++) {
         memset(carries, 0, max_carry_len);
         memset(each_turn, '0', max_carry_len);
 
-        for (int j = 0; j < a.size(); j++) {
+        for (int j = 0; j < operand1.size(); j++) {
 
-            int single_multiply_result = (b[i] - '0') * (a[j] - '0') + carries[j];
+            int single_multiply_result = (operand2[i] - '0') * (operand1[j] - '0') + carries[j];
             each_turn[j] = single_multiply_result % 10 + '0';
             carries[j + 1] = single_multiply_result / 10;
 
-            if (j == a.size() - 1) {
+            if (j == operand1.size() - 1) {
                 each_turn[j + 1] = carries[j + 1] + '0';
             }
 
@@ -604,29 +611,27 @@ void BigNumberCalculation::PositiveMultiply(std::string a, std::string b, std::s
         std::reverse(this_turn.begin(), this_turn.end());
         std::string delete_zero;
         DeleteZero(this_turn, delete_zero);
-        this_turn = delete_zero;
+        this_turn = std::move(delete_zero);
 
 
         std::string temp_sum;
-        BigNumberCalculation::Add(this_turn, sum, &temp_sum);
-        sum = temp_sum;
+        BigNumberCalculation::Add(&this_turn, c, &temp_sum);
+        *c = temp_sum;
     }
-
-    *c = sum;
 }
 
 void BigNumberCalculation::Multiply(const std::string *a, const std::string *b, std::string *c) {
     c->clear();
     std::string a_abs, b_abs;
-    Abs(*a, a_abs);
-    Abs(*b, b_abs);
+    Abs(a, &a_abs);
+    Abs(b, &b_abs);
     if (SameSign(a, b)) {
-        PositiveMultiply(a_abs, b_abs, c);
+        PositiveMultiply(&a_abs, &b_abs, c);
         return;
     }
 
     std::string result;
-    PositiveMultiply(a_abs, b_abs, &result);
+    PositiveMultiply(&a_abs, &b_abs, &result);
     Opposite(&result, c);
     return;
 }
@@ -642,11 +647,11 @@ bool BigNumberCalculation::SameSign(const std::string *a, const std::string *b) 
 
 EN_RV BigNumberCalculation::PositiveDivide(const std::string *a, const std::string *b, std::string *c) {
     c->clear();
-    if(Zero(b)) {
+    if (Zero(b)) {
         return ENR_DIVIDE_BY_ZERO;
     }
 
-    if (Compare(*a, *b) < 0) {
+    if (Compare(a, b) < 0) {
         *c = std::string("0");
         return ENR_OK;
     }
@@ -664,25 +669,25 @@ EN_RV BigNumberCalculation::PositiveDivide(const std::string *a, const std::stri
     for (int i = 0; i < turn; i++) {
         int count = 0;
         std::string sub_result;
-        Sub(temp_a, *b, &sub_result);
+        Sub(&temp_a, b, &sub_result);
 
         while (PositiveOrZero(&sub_result)) {
             count++;
             std::string temp;
-            Sub(temp_a, *b, &temp);
+            Sub(&temp_a, b, &temp);
             temp_a = temp;
-            Sub(temp_a, *b, &sub_result);
+            Sub(&temp_a, b, &sub_result);
         }
         quotient.push_back(count + '0');
         temp_r = temp_a;
-        if(i != turn - 1) {
+        if (i != turn - 1) {
             temp_a = temp_r + (*a)[b_len + i];
         }
     }
     r = temp_r;
     std::string temp;
     DeleteZero(quotient, temp);
-    quotient = temp;
+    quotient = std::move(temp);
     *c = quotient;
     return ENR_OK;
 }
@@ -690,8 +695,8 @@ EN_RV BigNumberCalculation::PositiveDivide(const std::string *a, const std::stri
 EN_RV BigNumberCalculation::Divide(const std::string *a, const std::string *b, std::string *c) {
     c->clear();
     std::string a_abs, b_abs;
-    Abs(*a, a_abs);
-    Abs(*b, b_abs);
+    Abs(a, &a_abs);
+    Abs(b, &b_abs);
     EN_RV rv;
 
     if (SameSign(a, b)) {
@@ -701,7 +706,7 @@ EN_RV BigNumberCalculation::Divide(const std::string *a, const std::string *b, s
 
     std::string result;
     rv = PositiveDivide(&a_abs, &b_abs, &result);
-    if(rv!=ENR_DIVIDE_BY_ZERO) {
+    if (rv != ENR_DIVIDE_BY_ZERO) {
         Opposite(&result, c);
     }
     return rv;
